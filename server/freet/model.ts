@@ -14,8 +14,14 @@ export type Freet = {
   dateCreated: Date;
   content: string;
   dateModified: Date;
-  expandId: string;
+  expandContent: string;
+  sourceOne: string;
+  sourceTwo: string;
+  sourceThree: string;
+  similarOne: string;
+  similarTwo: string;
   sourceId: string;
+  expandId: string;
   similarId: string;
 };
 
@@ -25,9 +31,15 @@ export type PopulatedFreet = {
   dateCreated: Date;
   content: string;
   dateModified: Date;
-  expandId: string;
+  expandContent: string;
   sourceId: string;
+  expandId: string;
   similarId: string;
+  sourceOne: string;
+  sourceTwo: string;
+  sourceThree: string;
+  similarOne: string;
+  similarTwo: string;
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
@@ -56,7 +68,7 @@ const FreetSchema = new Schema<Freet>({
     type: Date,
     required: true
   },
-  expandId: {
+  expandContent: {
     type: String,
     required: false
   },
@@ -64,7 +76,31 @@ const FreetSchema = new Schema<Freet>({
     type: String,
     required: false
   },
+  expandId: {
+    type: String,
+    required: false
+  },
   similarId: {
+    type: String,
+    required: false
+  },
+  sourceOne: {
+    type: String,
+    required: false
+  },
+  sourceTwo: {
+    type: String,
+    required: false
+  },
+  sourceThree: {
+    type: String,
+    required: false
+  },
+  similarOne: {
+    type: String,
+    required: false
+  },
+  similarTwo: {
     type: String,
     required: false
   }

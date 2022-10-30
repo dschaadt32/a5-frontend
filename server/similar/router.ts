@@ -43,7 +43,7 @@ router.post(
 );
 
 // Logic taken from https://www.npmjs.com/package/sentence-similarity
-const findTwoMostSimilar = async (freetId: string) => {
+export const findTwoMostSimilar = async (freetId: string) => {
   const similarity = require('sentence-similarity');
   const similarityScore = require('similarity-score');
 
@@ -72,3 +72,4 @@ const findTwoMostSimilar = async (freetId: string) => {
 };
 
 export {router as SimilarRouter};
+

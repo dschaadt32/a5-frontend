@@ -180,12 +180,6 @@ const expandExists = async (req: Request, res: Response, next: NextFunction) => 
  */
 const isValidExpandedContent = (req: Request, res: Response, next: NextFunction) => {
   const {content} = req.body as {content: string};
-  if (!content.trim()) {
-    res.status(400).json({
-      error: 'Expanded content must be at least one character long.'
-    });
-    return;
-  }
 
   if (content.length > 1400) {
     res.status(413).json({

@@ -34,6 +34,7 @@
         <button @click="deleteFreet">
           🗑️ Delete
         </button>
+
       </div>
     </header>
     <textarea
@@ -48,10 +49,64 @@
     >
       {{ freet.content }}
     </p>
+
+    <p
+      v-if="showMore"
+      class="expand"
+    >
+      {{ freet.expandContent }}
+    </p>
+    <p
+      v-if="showMore"
+      class="content"
+    >
+      {{ freet.sourceOne }}
+    </p>
+    <p
+      v-if="showMore"
+      class="sourceTwo"
+    >
+      {{ freet.sourceTwo }}
+    </p>
+    <p
+      v-if="showMore"
+      class="sourceThree"
+    >
+      {{ freet.sourceOne }}
+    </p>
+  
+    <p
+      v-if="showMore"
+      class="similarOne"
+    >
+      {{ freet.similarOne }}
+    </p>
+    <p
+      v-if="showMore"
+      class="similarTwo"
+    >
+      {{ freet.similarTwo }}
+    </p>
+
     <p class="info">
       Posted at {{ freet.dateModified }}
       <i v-if="freet.edited">(edited)</i>
     </p>
+
+    <button
+    v-if="!showMore"
+    @click="showMoreClick"
+      >
+        Show more...
+    </button>
+
+    <button
+    v-else
+    @click="showLess"
+      >
+        Show less...
+    </button>
+
     <section class="alerts">
       <article
         v-for="(status, alert, index) in alerts"
@@ -77,6 +132,7 @@ export default {
   data() {
     return {
       editing: false, // Whether or not this freet is in edit mode
+      showMore: false,
       draft: this.freet.content, // Potentially-new content for this freet
       alerts: {} // Displays success/error messages encountered during freet modification
     };
@@ -88,6 +144,12 @@ export default {
        */
       this.editing = true; // Keeps track of if a freet is being edited
       this.draft = this.freet.content; // The content of our current "draft" while being edited
+    },
+    showMoreClick() {
+      this.showMore = true;
+    },
+    showLess() {
+      this.showMore = false;
     },
     stopEditing() {
       /**
@@ -120,7 +182,6 @@ export default {
         setTimeout(() => this.$delete(this.alerts, error), 3000);
         return;
       }
-
       const params = {
         method: 'PATCH',
         message: 'Successfully edited freet!',

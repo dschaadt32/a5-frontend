@@ -16,7 +16,7 @@ const ExpandSchema = new Schema({
   // The expands's content
   content: {
     type: String,
-    required: true
+    required: false
   },
   // The freetid the expand is associated with
   freetId: {

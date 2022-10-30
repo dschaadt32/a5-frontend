@@ -2,6 +2,9 @@ import type {HydratedDocument, Types} from 'mongoose';
 import type {Freet} from './model';
 import FreetModel from './model';
 import UserCollection from '../user/collection';
+import ExpandCollection from '../expand/collection';
+import SourceCollection from '../source/collection';
+import {findTwoMostSimilar} from '../similar/router';
 
 /**
  * This files contains a class that has the functionality to explore freets
@@ -19,15 +22,25 @@ class FreetCollection {
    * @param {string} content - The id of the content of the freet
    * @return {Promise<HydratedDocument<Freet>>} - The newly created freet
    */
-  static async addOne(authorId: Types.ObjectId | string, content: string): Promise<HydratedDocument<Freet>> {
+  // eslint-disable-next-line max-params
+  static async addOne(authorId: Types.ObjectId | string, content: string, expandContent: string, sourceOne: string, sourceTwo: string, sourceThree: string): Promise<HydratedDocument<Freet>> {
     const date = new Date();
     const freet = new FreetModel({
       authorId,
       dateCreated: date,
       content,
-      dateModified: date
+      dateModified: date,
+      sourceOne,
+      sourceTwo,
+      sourceThree,
+      expandContent
     });
     await freet.save(); // Saves freet to MongoDB
+    // const [similarIdOne, similarIdTwo] = await findTwoMostSimilar(freet.id);
+    // freet.similarOne = similarIdOne.toString();
+    // freet.similarTwo = similarIdTwo.toString();
+    await ExpandCollection.addOne(expandContent, freet.id);
+    await SourceCollection.addOne(sourceOne, sourceTwo, sourceThree, freet.id);
     return freet.populate('authorId');
   }
 
