@@ -43,6 +43,30 @@
       :value="draft"
       @input="draft = $event.target.value"
     />
+    <textarea
+      v-if="editing"
+      class="expandContent"
+      :value="expandDraft"
+      @input="expandDraft = $event.target.value"
+    />
+    <textarea
+      v-if="editing"
+      class="sourceOne"
+      :value="sourceOneDraft"
+      @input="sourceOneDraft = $event.target.value"
+    />
+    <textarea
+      v-if="editing"
+      class="sourceTwo"
+      :value="sourceTwoDraft"
+      @input="sourceTwoDraft = $event.target.value"
+    />
+    <textarea
+      v-if="editing"
+      class="sourceThree"
+      :value="sourceThreeDraft"
+      @input="sourceThreeDraft = $event.target.value"
+    />
     <p
       v-else
       class="content"
@@ -72,7 +96,7 @@
       v-if="showMore"
       class="sourceThree"
     >
-      {{ freet.sourceOne }}
+      {{ freet.sourceThree }}
     </p>
   
     <p
@@ -134,6 +158,10 @@ export default {
       editing: false, // Whether or not this freet is in edit mode
       showMore: false,
       draft: this.freet.content, // Potentially-new content for this freet
+      expandDraft: this.freet.expandContent,
+      sourceOneDraft: this.freet.sourceOne,
+      sourceTwoDraft: this.freet.sourceTwo,
+      sourceThreeDraft: this.freet.sourceThree,
       alerts: {} // Displays success/error messages encountered during freet modification
     };
   },
@@ -144,6 +172,10 @@ export default {
        */
       this.editing = true; // Keeps track of if a freet is being edited
       this.draft = this.freet.content; // The content of our current "draft" while being edited
+      this.expandDraft = this.freet.expandContent;
+      this.sourceOneDraft = this.freet.sourceOne;
+      this.sourceTwoDraft = this.freet.sourceTwo;
+      this.sourceThreeDraft = this.freet.sourceThree;
     },
     showMoreClick() {
       this.showMore = true;
@@ -157,6 +189,10 @@ export default {
        */
       this.editing = false;
       this.draft = this.freet.content;
+      this.expandDraft = this.freet.expandContent;
+      this.sourceOneDraft = this.freet.sourceOne;
+      this.sourceTwoDraft = this.freet.sourceTwo;
+      this.sourceThreeDraft = this.freet.sourceThree;
     },
     deleteFreet() {
       /**
@@ -176,8 +212,8 @@ export default {
       /**
        * Updates freet to have the submitted draft content.
        */
-      if (this.freet.content === this.draft) {
-        const error = 'Error: Edited freet content should be different than current freet content.';
+      if (this.freet.content === this.draft && this.freet.expandContent === this.expandDraft && this.freet.sourceOne === this.sourceOneDraft && this.freet.sourceTwo === this.sourceTwoDraft && this.freet.sourceThree === this.sourceThreeDraft) {
+        const error = 'Error: Edited freet should be different than current freet.';
         this.$set(this.alerts, error, 'error'); // Set an alert to be the error text, timeout of 3000 ms
         setTimeout(() => this.$delete(this.alerts, error), 3000);
         return;
@@ -185,7 +221,14 @@ export default {
       const params = {
         method: 'PATCH',
         message: 'Successfully edited freet!',
-        body: JSON.stringify({content: this.draft}),
+        body: JSON.stringify(
+          {
+            content: this.draft,
+            expandContent: this.expandDraft,
+            sourceOne: this.sourceOneDraft,
+            sourceTwo: this.sourceTwoDraft,
+            sourceThree: this.sourceThreeDraft
+          }),
         callback: () => {
           this.$set(this.alerts, params.message, 'success');
           setTimeout(() => this.$delete(this.alerts, params.message), 3000);

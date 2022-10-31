@@ -2,7 +2,6 @@ import type {HydratedDocument, Types} from 'mongoose';
 import type {Source} from './model';
 import SourceModel from './model';
 import FreetCollection from '../freet/collection';
-import FreetModel from '../freet/model';
 
 class SourceCollection {
   /**

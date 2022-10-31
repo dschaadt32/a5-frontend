@@ -5,6 +5,7 @@ import UserCollection from '../user/collection';
 import ExpandCollection from '../expand/collection';
 import SourceCollection from '../source/collection';
 import {findTwoMostSimilar} from '../similar/router';
+import ExpandModel from 'server/expand/model';
 
 /**
  * This files contains a class that has the functionality to explore freets
@@ -82,9 +83,16 @@ class FreetCollection {
    * @param {string} content - The new content of the freet
    * @return {Promise<HydratedDocument<Freet>>} - The newly updated freet
    */
-  static async updateOne(freetId: Types.ObjectId | string, content: string): Promise<HydratedDocument<Freet>> {
+  // eslint-disable-next-line max-params
+  static async updateOne(freetId: Types.ObjectId | string, content: string, expandContent: string, sourceOne: string, sourceTwo: string, sourceThree: string): Promise<HydratedDocument<Freet>> {
     const freet = await FreetModel.findOne({_id: freetId});
     freet.content = content;
+    await ExpandCollection.addOne(expandContent, freet.id);
+    freet.expandContent = expandContent;
+    await SourceCollection.addOne(sourceOne, sourceTwo, sourceThree, freet.id);
+    freet.sourceOne = sourceOne;
+    freet.sourceTwo = sourceTwo;
+    freet.sourceThree = sourceThree;
     freet.dateModified = new Date();
     await freet.save();
     return freet.populate('authorId');

@@ -3,6 +3,8 @@ import express from 'express';
 import FreetCollection from './collection';
 import * as userValidator from '../user/middleware';
 import * as freetValidator from '../freet/middleware';
+import * as expandValidator from '../expand/middleware';
+import * as sourceValidator from '../source/middleware';
 import * as util from './util';
 
 const router = express.Router();
@@ -124,10 +126,12 @@ router.patch(
     userValidator.isUserLoggedIn,
     freetValidator.isFreetExists,
     freetValidator.isValidFreetModifier,
-    freetValidator.isValidFreetContent
+    freetValidator.isValidFreetContent,
+    expandValidator.isValidExpandedContent,
+    sourceValidator.isValidURLS2
   ],
   async (req: Request, res: Response) => {
-    const freet = await FreetCollection.updateOne(req.params.freetId, req.body.content);
+    const freet = await FreetCollection.updateOne(req.params.freetId, req.body.content, req.body.expandContent, req.body.sourceOne, req.body.sourceTwo, req.body.sourceThree);
     res.status(200).json({
       message: 'Your freet was updated successfully.',
       freet: util.constructFreetResponse(freet)

@@ -36,6 +36,36 @@ const isValidURLS = (req: Request, res: Response, next: NextFunction) => {
 };
 
 /**
+ * Checks if the expandedcontent of the freet in req.body is valid, i.e not a stream of empty
+ * spaces and not more than 1400 characters
+ */
+const isValidURLS2 = (req: Request, res: Response, next: NextFunction) => {
+  const {sourceOne, sourceTwo, sourceThree} = req.body as {sourceOne: string; sourceTwo: string; sourceThree: string};
+  if (sourceOne && isNotValidUrl(sourceOne)) {
+    res.status(400).json({
+      error: 'URL1 is incorrectly formatted'
+    });
+    return;
+  }
+
+  if (sourceTwo && isNotValidUrl(sourceTwo)) {
+    res.status(400).json({
+      error: 'URL2 is incorrectly formatted'
+    });
+    return;
+  }
+
+  if (sourceThree && isNotValidUrl(sourceThree)) {
+    res.status(400).json({
+      error: 'URL3 is incorrectly formatted'
+    });
+    return;
+  }
+
+  next();
+};
+
+/**
  * Checks if the current user id equals the author of the freet the source is
  * associated with is the same
  */
@@ -118,6 +148,7 @@ const isFreetExists = async (req: Request, res: Response, next: NextFunction) =>
 
 export {
   isValidURLS,
+  isValidURLS2,
   userIdEqualsauthorId,
   sourceExists,
   isUserLoggedIn,
@@ -133,3 +164,4 @@ const isNotValidUrl = (urlString: string)=> {
     return true;
   }
 };
+
