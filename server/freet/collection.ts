@@ -4,9 +4,8 @@ import FreetModel from './model';
 import UserCollection from '../user/collection';
 import ExpandCollection from '../expand/collection';
 import SourceCollection from '../source/collection';
-import {findTwoMostSimilar} from '../similar/router';
+import {findTwoMostSimilarFromContent, findTwoMostSimilar} from '../similar/router';
 import ExpandModel from 'server/expand/model';
-
 /**
  * This files contains a class that has the functionality to explore freets
  * stored in MongoDB, including adding, finding, updating, and deleting freets.
@@ -26,6 +25,10 @@ class FreetCollection {
   // eslint-disable-next-line max-params
   static async addOne(authorId: Types.ObjectId | string, content: string, expandContent: string, sourceOne: string, sourceTwo: string, sourceThree: string): Promise<HydratedDocument<Freet>> {
     const date = new Date();
+    const [similarIdOne, similarIdTwo] = await findTwoMostSimilarFromContent(content);
+    const similarOne_ = similarIdOne.toString();
+    const similarTwo_ = similarIdTwo.toString();
+
     const freet = new FreetModel({
       authorId,
       dateCreated: date,
@@ -34,12 +37,13 @@ class FreetCollection {
       sourceOne,
       sourceTwo,
       sourceThree,
-      expandContent
+      expandContent,
+      similarOne: similarOne_,
+      similarTwo: similarTwo_
+
     });
     await freet.save(); // Saves freet to MongoDB
-    // const [similarIdOne, similarIdTwo] = await findTwoMostSimilar(freet.id);
-    // freet.similarOne = similarIdOne.toString();
-    // freet.similarTwo = similarIdTwo.toString();
+
     await ExpandCollection.addOne(expandContent, freet.id);
     await SourceCollection.addOne(sourceOne, sourceTwo, sourceThree, freet.id);
     return freet.populate('authorId');
@@ -93,6 +97,9 @@ class FreetCollection {
     freet.sourceOne = sourceOne;
     freet.sourceTwo = sourceTwo;
     freet.sourceThree = sourceThree;
+    const [similarIdOne, similarIdTwo] = await findTwoMostSimilar(freet.id);
+    freet.similarOne = similarIdOne.toString();
+    freet.similarTwo = similarIdTwo.toString();
     freet.dateModified = new Date();
     await freet.save();
     return freet.populate('authorId');
@@ -156,6 +163,19 @@ class FreetCollection {
   static async updateOneSimilarId(freetId: Types.ObjectId | string, similarId: string): Promise<HydratedDocument<Freet>> {
     const freet = await FreetModel.findOne({_id: freetId});
     freet.similarId = similarId;
+    await freet.save();
+    return freet.populate('authorId');
+  }
+
+  /**
+   * Update a freet with the new content
+   *
+   * @param {string} freetId - The id of the freet to be updated
+   * @return {Promise<HydratedDocument<Freet>>} - The newly updated freet
+   */
+  static async updateOneSimilar(freetId:string): Promise<HydratedDocument<Freet>> {
+    const freet = await FreetModel.findOne({_id: freetId});
+    [freet.similarOne, freet.similarTwo] = (await findTwoMostSimilar(freetId)).toString();
     await freet.save();
     return freet.populate('authorId');
   }

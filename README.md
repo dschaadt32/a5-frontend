@@ -106,7 +106,7 @@ Here, if `store.state.username` exists, we say `Welcome @username`. Otherwise, w
 ### Components
 Each `.vue` file also has script tag, which is where you can export the actual component.
 
-The "top level" components displayed when you navigating to certain URLs (like `/login` or `/account`) are shown in `client/router.ts`. Within each of these components, we have:
+The "top level" components displayed when you navigating to certain URLs (like `` or `/account`) are shown in `client/router.ts`. Within each of these components, we have:
 - `name` name of the component
 - `components` components that are used in this top level component, usually forms like `LoginForm`
 

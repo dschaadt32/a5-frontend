@@ -71,5 +71,30 @@ export const findTwoMostSimilar = async (freetId: string) => {
   return [best[0], second_best[0]];
 };
 
+// Logic taken from https://www.npmjs.com/package/sentence-similarity
+export const findTwoMostSimilarFromContent = async (content: string) => {
+  const similarity = require('sentence-similarity');
+  const similarityScore = require('similarity-score');
+
+  const winkOpts = {f: similarityScore.winklerMetaphone, options: {threshold: 0}};
+
+  const targetContent = content.split(' ');
+  const best = ['', 0];
+  const second_best = ['', 0];
+  const allFreets = await FreetModel.find({});
+  for (const freet of allFreets) {
+    const sim_score = similarity(freet.content.split(' '), targetContent, winkOpts).score;
+    if (best[0] === '' || sim_score > best[1]) {
+      best[0] = freet.id;
+      best[1] = sim_score;
+    } else if (second_best[0] === '' || sim_score > second_best[1]) {
+      second_best[0] = freet.id;
+      second_best[1] = sim_score;
+    }
+  }
+
+  return [best[0], second_best[0]];
+};
+
 export {router as SimilarRouter};
 

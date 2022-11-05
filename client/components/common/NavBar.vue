@@ -42,7 +42,7 @@
 <style scoped>
 nav {
     padding: 1vw 2vw;
-    background-color: #ccc;
+    background-color: #998DA0;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -52,6 +52,7 @@ nav {
 .title {
     font-size: 32px;
     margin: 0 5px;
+    color: #A6E1FA;
 }
 
 img {
@@ -73,9 +74,12 @@ img {
 
 .right a {
     margin-left: 5px;
+    color: #A6E1FA
 }
 
 .alerts {
     width: 25%;
 }
+
+
 </style>

@@ -16,7 +16,7 @@ export default {
         {id: 'expandContent', label: 'Expand', value: ''},
         {id: 'sourceOne', label: 'Source One', value: ''},
         {id: 'sourceTwo', label: 'Source Two', value: ''},
-        {id: 'sourceThree', label: 'Source Three', value: ''}
+        {id: 'sourceThree', label: 'Source Three', value: ''},
       ],
       title: 'Create a freet',
       refreshFreets: true,
@@ -29,3 +29,4 @@ export default {
   }
 };
 </script>
+

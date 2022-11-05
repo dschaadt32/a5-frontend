@@ -33,37 +33,36 @@
         </button>
         <button @click="deleteFreet">
           🗑️ Delete
-        </button>
-
+        </button> 
       </div>
     </header>
     <textarea
       v-if="editing"
-      class="content"
+      class="editcontent"
       :value="draft"
       @input="draft = $event.target.value"
     />
     <textarea
       v-if="editing"
-      class="expandContent"
+      class="editcontent"
       :value="expandDraft"
       @input="expandDraft = $event.target.value"
     />
     <textarea
       v-if="editing"
-      class="sourceOne"
+      class="editcontent"
       :value="sourceOneDraft"
       @input="sourceOneDraft = $event.target.value"
     />
     <textarea
       v-if="editing"
-      class="sourceTwo"
+      class="editcontent"
       :value="sourceTwoDraft"
       @input="sourceTwoDraft = $event.target.value"
     />
     <textarea
       v-if="editing"
-      class="sourceThree"
+      class="editsourceThree"
       :value="sourceThreeDraft"
       @input="sourceThreeDraft = $event.target.value"
     />
@@ -76,60 +75,71 @@
 
     <p
       v-if="showMore"
-      class="expand"
+      class="content"
     >
       {{ freet.expandContent }}
     </p>
+
     <p
       v-if="showMore"
-      class="content"
     >
-      {{ freet.sourceOne }}
-    </p>
-    <p
-      v-if="showMore"
-      class="sourceTwo"
-    >
-      {{ freet.sourceTwo }}
-    </p>
-    <p
-      v-if="showMore"
-      class="sourceThree"
-    >
-      {{ freet.sourceThree }}
-    </p>
-  
-    <p
-      v-if="showMore"
-      class="similarOne"
-    >
-      {{ freet.similarOne }}
-    </p>
-    <p
-      v-if="showMore"
-      class="similarTwo"
-    >
-      {{ freet.similarTwo }}
+      <b>Sources:</b>
     </p>
 
-    <p class="info">
+    <p
+      v-if="showMore"
+      class="contentIndent"
+    >
+      <a :href="freet.sourceOne"> {{ freet.sourceOne }} </a>
+    </p>
+    
+    <p
+      v-if="showMore"
+      class="contentIndent"
+    >
+      <a :href="freet.sourceTwo"> {{ freet.sourceTwo }} </a>
+    </p>
+    <p
+      v-if="showMore"
+      class="contentIndent"
+    >
+      <a :href="freet.sourceThree"> {{ freet.sourceThree }} </a>
+    </p>
+  
+
+    <p
+      v-if="showMore"
+      class="similar"
+    >
+      <router-link :to="'similar/' + freet.similarOne + '*' + freet.similarTwo">
+        More Freets like this
+      </router-link>
+    </p>
+
+    <p class="date">
       Posted at {{ freet.dateModified }}
       <i v-if="freet.edited">(edited)</i>
     </p>
 
-    <button
-    v-if="!showMore"
-    @click="showMoreClick"
+
+    <p align="right">
+      <button 
+        v-if="!showMore"
+        
+        class="showMore"
+        @click="showMoreClick"
       >
         Show more...
-    </button>
+      </button>
 
-    <button
-    v-else
-    @click="showLess"
+      <button 
+        v-else
+        class="showMore"
+        @click="showLess"
       >
         Show less...
-    </button>
+      </button>
+    </p>
 
     <section class="alerts">
       <article
@@ -227,7 +237,7 @@ export default {
             expandContent: this.expandDraft,
             sourceOne: this.sourceOneDraft,
             sourceTwo: this.sourceTwoDraft,
-            sourceThree: this.sourceThreeDraft
+            sourceThree: this.sourceThreeDraft,
           }),
         callback: () => {
           this.$set(this.alerts, params.message, 'success');
@@ -272,8 +282,54 @@ export default {
 
 <style scoped>
 .freet {
-    border: 1px solid #111;
+    border: solid 25px #998DA0;
     padding: 20px;
-    position: relative;
+    background-color: #A6E1FA;
+    color:  #111;
+    height: 80%
+    
+}
+.actions {
+  cursor: pointer;
+}
+
+.showMore{
+  display: inline-block;
+  background-color: #A6E1FA;
+  border-radius: 0px;
+  border: 4px double #A6E1FA;
+  color: #111;
+  cursor: pointer;
+  
+  position: relative; bottom:-35px;
+}
+.date {
+        font-size: small;
+        position: relative; bottom: -80px;
+}
+
+.author {
+        font-size: x-large;
+}
+
+.content{
+  font-size: large;
+}
+
+.contentIndent{
+  font-size: large;
+  text-indent: 5%;
+}
+
+.editcontent{
+  font-size: medium;
+}
+
+.similar a {
+  font-size: x-large;
+  color: #111;
+  font-style: italic;
+  position: relative; top: 25px;
 }
 </style>
+

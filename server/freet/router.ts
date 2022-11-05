@@ -17,6 +17,7 @@ const router = express.Router();
  * @return {FreetResponse[]} - A list of all the freets sorted in descending
  *                      order by date modified
  */
+
 /**
  * Get freets by author.
  *
@@ -46,6 +47,33 @@ router.get(
   async (req: Request, res: Response) => {
     const authorFreets = await FreetCollection.findAllByUsername(req.query.author as string);
     const response = authorFreets.map(util.constructFreetResponse);
+    res.status(200).json(response);
+  }
+);
+
+/**
+ * Get freets by id.
+ *
+ * @name GET /api/freets/:id
+ *
+ * @return {FreetResponse} - A freets with id
+ * @throws {400} - If id is not given
+ * @throws {404} - If no freet has given id
+ *
+ */
+router.get(
+  '/:id',
+  async (req: Request, res: Response) => {
+    const idFreet = await FreetCollection.findOne(req.params.id);
+    console.log(idFreet);
+    if (idFreet === null) {
+      res.status(404).json({
+        error: `Freet with freet ID ${req.params.freetId} does not exist.`
+      });
+      return;
+    }
+
+    const response = util.constructFreetResponse(idFreet);
     res.status(200).json(response);
   }
 );
@@ -123,7 +151,6 @@ router.delete(
 router.patch(
   '/:freetId?',
   [
-    userValidator.isUserLoggedIn,
     freetValidator.isFreetExists,
     freetValidator.isValidFreetModifier,
     freetValidator.isValidFreetContent,

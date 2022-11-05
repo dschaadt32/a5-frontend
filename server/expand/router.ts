@@ -81,7 +81,6 @@ router.delete(
     expandValidator.userIdEqualsauthorId
   ],
   async (req: Request, res: Response) => {
-    console.log(req.body.id);
     await ExpandCollection.deleteOne(req.body.id);
     req.body.id = undefined;
     res.status(200).json({
